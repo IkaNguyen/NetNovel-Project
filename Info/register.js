@@ -12,7 +12,7 @@ import {
 import Icon from "react-native-vector-icons/FontAwesome";
 
 
-const Login = ({ navigation }) => {
+const Register = ({ navigation }) => {
   {
     /* tạo component nút */
   }
@@ -69,7 +69,7 @@ const Login = ({ navigation }) => {
         setPass("");
         nameInputRef.current.focus();
         Alert.alert("Đăng ký thành công");
-        navigation.navigate("Login");
+        navigation.navigate("login");
         // ToastAlert(1, toast.show, "top-accent", "Thành công" ,"Đăng ký thành công");
 
 
@@ -93,11 +93,11 @@ const Login = ({ navigation }) => {
         {/* tạo text */}
         <View>
           <Image
-            source={require("../../assets/img/logo.png")}
+            source={require("./cfcf15d0fcd9b9be2205c08094d00d1b.png")}
             style={{ width: 180, height: 130, margin: 20 }}
           />
         </View>
-        <Text style={styles.title1}>Welcome Back</Text>
+        <Text style={styles.title1}></Text>
         <Text style={styles.title2}>Hãy đăng kí nếu bạn chưa có tài khoản.</Text>
 
 
@@ -166,7 +166,7 @@ const Login = ({ navigation }) => {
 
         <View style={styles.imageContainer}>
           <Image
-            source={require("../../assets/img/Subtract.png")} // Đường dẫn tới hình ảnh của bạn
+            source={require("./cfcf15d0fcd9b9be2205c08094d00d1b.png")} // Đường dẫn tới hình ảnh của bạn
             style={styles.image} // Đảm bảo hình ảnh chiếm toàn bộ không gian của View
           />
         </View>
@@ -176,7 +176,8 @@ const Login = ({ navigation }) => {
   );
 };
 
-export default Login;
+export default Register;
+
 const styles = StyleSheet.create({
   buttonContainer: {
     flexDirection: "row",

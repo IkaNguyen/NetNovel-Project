@@ -2,18 +2,16 @@ import { Text, SafeAreaView, StyleSheet, Image, View, TouchableOpacity } from 'r
 
 
 
-export default function Start({ navigation }) {
+export default function InfoSample({ navigation }) {
     return (
         <SafeAreaView style={styles.container}>
             <View>
-                <Image source={require('../../assets/img/start.png')} style={{ width: 350, height: 350 }} />
+                <Image source={require('./cfcf15d0fcd9b9be2205c08094d00d1b.png')} style={{ width: 350, height: 350 }} />
             </View>
             <Text style={styles.title}>
-                Net Novel
+                Hành trình mới trên những trang truyện!
             </Text>
-            <Text style={styles.content}>
-                Welcome back
-            </Text>
+
             <TouchableOpacity
                 style={styles.button}
                 onPress={() => navigation.navigate('Login')}
@@ -27,15 +25,15 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
         justifyContent: 'center',
-        backgroundColor: '#ecf0f1',
+        backgroundColor: '#ffffff',
         padding: 8,
     },
     title: {
-        margin: 24,
-        fontSize: 24,
+        marginBottom: 65,
+        fontSize: 25,
         fontWeight: 'bold',
         textAlign: 'center',
-        color: '#4E84C1',
+        color: '#3E8BA8',
     },
     content: {
         margin: 24,
@@ -47,7 +45,7 @@ const styles = StyleSheet.create({
     button: {
         width: 200,
         borderRadius: 20,
-        backgroundColor: '#4E84C1',
+        backgroundColor: '#3E8BA8',
         justifyContent: 'center',
         alignItems: 'center',
         padding: 10,

@@ -77,14 +77,9 @@ const Login = ({ navigation }) => {
       <View style={{ flex: 1, alignItems: "center" }}>
         {/* tạo text */}
 
-        <View>
-          <Image
-            source={require("../../assets/img/logo.png")}
-            style={{ width: 180, height: 130, margin: 20 }}
-          />
-        </View>
-        <Text style={styles.title1}>Welcome Back</Text>
-        <Text style={styles.title2}>Đăng nhập khi đã có tài khoản</Text>
+
+        <Text style={styles.title1}></Text>
+        <Text style={styles.title2}>Đăng nhập</Text>
 
 
         {/* tạo nút */}
@@ -150,15 +145,15 @@ const Login = ({ navigation }) => {
 
         <View style={styles.checkandforgot2}>
           <Text style={styles.text2}>Bạn chưa có tài khoản?</Text>
-          <TouchableOpacity onPress={() => navigation.navigate("Reg")}>
+          <TouchableOpacity onPress={() => navigation.navigate("Register")}>
             <Text style={styles.text1}>Tạo tài khoản</Text>
           </TouchableOpacity>
         </View>
 
         <View style={styles.imageContainer}>
           <Image
-            source={require("../../assets/img/Subtract.png")} // Đường dẫn tới hình ảnh của bạn
-            style={styles.image} // Đảm bảo hình ảnh chiếm toàn bộ không gian của View
+            source={require("./frieren-beyond-journeys-end-anime-phone-wallpaper-hd-uhdpaper.com-176@3@a.jpg")} // Đường dẫn tới hình ảnh của bạn
+            style={{ width: 400, height: 650, }} 
           />
         </View>
       </View>
@@ -167,6 +162,7 @@ const Login = ({ navigation }) => {
 };
 
 export default Login;
+
 const styles = StyleSheet.create({
   buttonContainer: {
     flexDirection: "row",
@@ -287,11 +283,11 @@ const styles = StyleSheet.create({
     margin: 10,
   },
   title2: {
-    fontSize: 32,
-    color: "#4E84C1",
+    fontSize: 40,
+    color: "#d6e7ee",
     fontWeight: "700",
     margin: 15,
-    marginBottom: 71,
+    marginBottom: 45,
   },
   title3: {
     fontSize: 15,
@@ -308,8 +304,5 @@ const styles = StyleSheet.create({
     zIndex: -1,
     // Đảm bảo hình ảnh nằm dưới nội dung
   },
-  image: {
-    flex: 1,
-    resizeMode: "cover", // Đảm bảo hình ảnh điều chỉnh kích thước để lấp đầy không gian
-  },
+
 });
