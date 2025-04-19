@@ -91,7 +91,7 @@ const Register = ({ navigation }) => {
     <ScrollView>
       <View style={{ flex: 1, alignItems: "center" }}>
         {/* tạo text */}
-        
+
         <Text style={styles.title1}></Text>
         <Text style={styles.title2}>Đăng kí</Text>
 
@@ -119,6 +119,7 @@ const Register = ({ navigation }) => {
               ref={nameInputRef}
               style={styles.input}
               placeholder="Họ và tên"
+              placeholderTextColor="white"
               value={name}
               onChangeText={setName}
             />
@@ -129,6 +130,7 @@ const Register = ({ navigation }) => {
             <TextInput
               style={styles.input}
               placeholder="Tài khoản"
+              placeholderTextColor="white"
               value={account}
               onChangeText={setAccount}
             />
@@ -139,6 +141,7 @@ const Register = ({ navigation }) => {
             <TextInput
               style={styles.input}
               placeholder="Mật khẩu"
+              placeholderTextColor="white"
               secureTextEntry
               value={pass}
               onChangeText={setPass}
@@ -152,7 +155,7 @@ const Register = ({ navigation }) => {
 
         <View style={styles.checkandforgot2}>
           <Text style={styles.text2}>Bạn đã có tài khoản?</Text>
-          <TouchableOpacity onPress={() => navigation.navigate("Login")}>
+          <TouchableOpacity style={styles.buttonGoToLogin} onPress={() => navigation.navigate("Login")}>
             <Text style={styles.text1}>Đăng nhập</Text>
           </TouchableOpacity>
         </View>
@@ -162,7 +165,7 @@ const Register = ({ navigation }) => {
         <View style={styles.imageContainer}>
           <Image
             source={require("./img.jpg")} // Đường dẫn tới hình ảnh của bạn
-            style={{ width: 400, height: 670, marginRight: 20}} // Đảm bảo hình ảnh chiếm toàn bộ không gian của View
+            style={{ width: 400, height: 670, marginRight: 20 }} // Đảm bảo hình ảnh chiếm toàn bộ không gian của View
           />
         </View>
       </View>
@@ -216,6 +219,7 @@ const styles = StyleSheet.create({
     paddingVertical: 8,
     width: 300,
     alignItems: "center",
+    color: "#ffffff"
   },
   checkboxContainer: {
     flexDirection: "row",
@@ -251,13 +255,13 @@ const styles = StyleSheet.create({
   text1: {
     marginLeft: 10,
     fontSize: 16,
-    color: "#0A26BA",
+    color: "#ffffff",
     fontWeight: "700",
   },
   text2: {
     marginLeft: 10,
     fontSize: 16,
-    color: "#4E84C1",
+    color: "#ffffff",
     fontWeight: "700",
   },
   forgotPasswordButton: {},
@@ -269,7 +273,7 @@ const styles = StyleSheet.create({
   buttonLogin: {
     width: 200,
     borderRadius: 20,
-    backgroundColor: "#4E84C1",
+    backgroundColor: "#009999",
     justifyContent: "center",
     alignItems: "center",
     padding: 10,
@@ -294,11 +298,11 @@ const styles = StyleSheet.create({
     margin: 10,
   },
   title2: {
-    fontSize: 32,
-    color: "#4E84C1",
+    fontSize: 40,
+    color: "#d6e7ee",
     fontWeight: "700",
     margin: 15,
-    marginBottom: 48,
+    marginBottom: 45,
   },
   title3: {
     fontSize: 18,
@@ -315,8 +319,19 @@ const styles = StyleSheet.create({
     zIndex: -1,
     // Đảm bảo hình ảnh nằm dưới nội dung
   },
-  image: {
-    flex: 1,
-    resizeMode: "cover", // Đảm bảo hình ảnh điều chỉnh kích thước để lấp đầy không gian
+  buttonGoToLogin: {
+    width: 119,
+    borderRadius: 20,
+    backgroundColor: "#009999",
+    justifyContent: "center",
+    alignItems: "center",
+    alignSelf: "center",
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.8,
+    shadowRadius: 4,
+    elevation: 4,
+    marginLeft: 10,
+    paddingRight: 10,
   },
 });
