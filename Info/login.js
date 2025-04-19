@@ -103,6 +103,7 @@ const Login = ({ navigation }) => {
             <TextInput
               style={styles.input}
               placeholder="Tài khoản"
+              placeholderTextColor="white"
               value={account}
               onChangeText={setAccount}
             />
@@ -112,6 +113,7 @@ const Login = ({ navigation }) => {
             <TextInput
               style={styles.input}
               placeholder="Mật khẩu"
+              placeholderTextColor="white"
               value={password}
               onChangeText={setPassword}
               secureTextEntry
@@ -132,6 +134,7 @@ const Login = ({ navigation }) => {
 
             <TouchableOpacity
               style={styles.forgotPasswordButton}
+              onPress={() => navigation.navigate("Register")}
               activeOpacity={0.7}
             >
               <Text style={styles.forgotPasswordLabel}>Quên mật khẩu?</Text>
@@ -145,15 +148,15 @@ const Login = ({ navigation }) => {
 
         <View style={styles.checkandforgot2}>
           <Text style={styles.text2}>Bạn chưa có tài khoản?</Text>
-          <TouchableOpacity onPress={() => navigation.navigate("Register")}>
+          <TouchableOpacity style={styles.buttonCreateAcc} onPress={() => navigation.navigate("Register")}>
             <Text style={styles.text1}>Tạo tài khoản</Text>
           </TouchableOpacity>
         </View>
 
         <View style={styles.imageContainer}>
           <Image
-            source={require("./frieren-beyond-journeys-end-anime-phone-wallpaper-hd-uhdpaper.com-176@3@a.jpg")} // Đường dẫn tới hình ảnh của bạn
-            style={{ width: 400, height: 650, }} 
+            source={require("./img.jpg")} // Đường dẫn tới hình ảnh của bạn
+            style={{ width: 400, height: 670, marginRight: 20}} 
           />
         </View>
       </View>
@@ -192,7 +195,21 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: "bold",
   },
-
+  buttonCreateAcc: {
+    width: 119,
+    borderRadius: 20,
+    backgroundColor: "#009999",
+    justifyContent: "center",
+    alignItems: "center",
+    alignSelf: "center",
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.8,
+    shadowRadius: 4,
+    elevation: 4,
+    marginLeft: 10,
+    paddingRight: 10,
+  },
   inputContainer: {
     width: "100%",
     marginBottom: 10,
@@ -206,6 +223,7 @@ const styles = StyleSheet.create({
     paddingVertical: 8,
     width: 300,
     alignItems: "center",
+    color: "#ffffff"
   },
   checkboxContainer: {
     flexDirection: "row",
@@ -227,38 +245,38 @@ const styles = StyleSheet.create({
     height: 20,
     borderRadius: 4,
     borderWidth: 2,
-    borderColor: "#4267B2",
+    borderColor: "#ffffff",
     justifyContent: "center",
     alignItems: "center",
   },
   checkboxIcon: {
     width: 10,
     height: 10,
-    backgroundColor: "#4267B2",
+    backgroundColor: "#ffffff",
     borderRadius: 2,
   },
   text1: {
     marginLeft: 10,
     fontSize: 16,
-    color: "#0A26BA",
+    color: "#ffffff",
     fontWeight: "700",
   },
   text2: {
     marginLeft: 10,
     fontSize: 16,
-    color: "#4E84C1",
+    color: "#ffffff",
     fontWeight: "700",
   },
   forgotPasswordButton: {},
   forgotPasswordLabel: {
     fontSize: 16,
-    color: "#DB4437",
+    color: "#ffffff",
     fontWeight: "700",
   },
   buttonLogin: {
     width: 200,
     borderRadius: 20,
-    backgroundColor: "#4E84C1",
+    backgroundColor: "#009999",
     justifyContent: "center",
     alignItems: "center",
     padding: 10,

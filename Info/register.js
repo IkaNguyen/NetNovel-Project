@@ -69,7 +69,7 @@ const Register = ({ navigation }) => {
         setPass("");
         nameInputRef.current.focus();
         Alert.alert("Đăng ký thành công");
-        navigation.navigate("login");
+        navigation.navigate("Login");
         // ToastAlert(1, toast.show, "top-accent", "Thành công" ,"Đăng ký thành công");
 
 
@@ -91,14 +91,9 @@ const Register = ({ navigation }) => {
     <ScrollView>
       <View style={{ flex: 1, alignItems: "center" }}>
         {/* tạo text */}
-        <View>
-          <Image
-            source={require("./cfcf15d0fcd9b9be2205c08094d00d1b.png")}
-            style={{ width: 180, height: 130, margin: 20 }}
-          />
-        </View>
+        
         <Text style={styles.title1}></Text>
-        <Text style={styles.title2}>Hãy đăng kí nếu bạn chưa có tài khoản.</Text>
+        <Text style={styles.title2}>Đăng kí</Text>
 
 
         {/* tạo nút */}
@@ -166,8 +161,8 @@ const Register = ({ navigation }) => {
 
         <View style={styles.imageContainer}>
           <Image
-            source={require("./cfcf15d0fcd9b9be2205c08094d00d1b.png")} // Đường dẫn tới hình ảnh của bạn
-            style={styles.image} // Đảm bảo hình ảnh chiếm toàn bộ không gian của View
+            source={require("./img.jpg")} // Đường dẫn tới hình ảnh của bạn
+            style={{ width: 400, height: 670, marginRight: 20}} // Đảm bảo hình ảnh chiếm toàn bộ không gian của View
           />
         </View>
       </View>
