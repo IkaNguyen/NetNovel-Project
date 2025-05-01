@@ -4,7 +4,17 @@ import { Text, SafeAreaView, StyleSheet, Image, View, TouchableOpacity } from 'r
 import InfoSample from './Info/InfoSample';
 import Login from './Info/login';
 import Register from './Info/register';
+import AppNavigation from './Info/nab';
+import Admin from './Info/admin';
+import Profile from './Info/profile';
+import Search from './Info/search';
+import Truyen from './Info/truyen';
+import List from './Info/list';
+import Home from './Info/home';
+import Chap from './Info/chap';
 
+
+import ChapterScreen from './Info/ChapterScreen';
 const Stack = createStackNavigator();
 export default function App() {
   return (
@@ -13,6 +23,14 @@ export default function App() {
         <Stack.Screen name="Info" component={InfoSample} options={{ headerShown: false }} />
         <Stack.Screen name="Login" component={Login} options={{ headerShown: false }} />
         <Stack.Screen name="Register" component={Register} options={{ headerShown: false }} />
+        <Stack.Screen name="Main" component={AppNavigation} options={{ headerShown: false }} />
+        <Stack.Screen name="Admin" component={Admin} options={{ headerShown: false }} />
+        <Stack.Screen name="List" component={List} options={{ headerShown: false }} />
+        <Stack.Screen name="Profile" component={Profile} options={{ headerShown: false }} />
+        <Stack.Screen name="Search" component={Search} options={{ headerShown: false }} />
+        <Stack.Screen name="Home" component={Home} options={{ headerShown: false }} />
+        <Stack.Screen name="Chap" component={Chap} options={{ headerShown: false }} />
+       
       </Stack.Navigator>
     </NavigationContainer>
   );

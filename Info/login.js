@@ -57,7 +57,7 @@ const Login = ({ navigation }) => {
         if (user.role === "admin") {
           navigation.navigate("Admin"); // y chang
         } else if (user.role === "user") {
-          navigation.navigate("User"); // chỉnh sửa
+          navigation.navigate("Main"); // chỉnh sửa
         }
 
         // Đặt lại giá trị của các ô TextInput sau khi đăng nhập thành công
