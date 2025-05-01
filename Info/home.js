@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState } from 'react';
-import { View, Text, Image, TouchableOpacity, FlatList, ScrollView, StyleSheet } from 'react-native';
+import { View, Text, Image, TouchableOpacity, FlatList, StyleSheet } from 'react-native';
 import { UserContext } from './UserContext';
 import { useNavigation } from '@react-navigation/native';
 import { getAllStories } from './storage';
@@ -41,37 +41,60 @@ export default function Home() {
     }, [allStories]);
 
     return (
-        <ScrollView style={styles.container}>
-            <TouchableOpacity style={styles.header} onPress={() => navigation.navigate('Profile')}>
-                <Image source={{ uri: user.avatar }} style={styles.avatar} />
-                <View style={{ marginLeft: 10 }}>
-                    <Text style={styles.username}>{user.name}</Text>
-                    <Text style={styles.profileText}>Trang cá nhân →</Text>
-                </View>
-            </TouchableOpacity>
-
-            <Text style={styles.sectionTitle}>Top Trending</Text>
-            <FlatList
-                horizontal
-                data={trending}
-                renderItem={({ item }) => renderStory(item)}
-                keyExtractor={(item) => item.id}
-                showsHorizontalScrollIndicator={false}
-                contentContainerStyle={{ paddingHorizontal: 10 }}
-            />
-
-            <Text style={styles.sectionTitle}>Truyện mới</Text>
-            <FlatList
-                data={stories}
-                renderItem={({ item }) => renderStory(item)} // Sử dụng hàm renderStory
-                keyExtractor={(item) => item.id}
-                numColumns={2}
-                contentContainerStyle={styles.newStories}
-            />
-            <TouchableOpacity style={styles.viewAllButton} onPress={() => navigation.navigate('List')}>
-                <Text style={styles.viewAllText}>Xem danh sách truyện đã lưu</Text>
-            </TouchableOpacity>
-        </ScrollView>
+        <FlatList
+            data={[{ type: 'header' }, { type: 'trending' }, { type: 'newStories' }, { type: 'viewAllButton' }]}  // Danh sách các phần trong trang Home
+            renderItem={({ item }) => {
+                if (item.type === 'header') {
+                    return (
+                        <TouchableOpacity style={styles.header} onPress={() => navigation.navigate('Profile')}>
+                            <Image source={{ uri: user.avatar }} style={styles.avatar} />
+                            <View style={{ marginLeft: 10 }}>
+                                <Text style={styles.username}>{user.name}</Text>
+                                <Text style={styles.profileText}>Trang cá nhân →</Text>
+                            </View>
+                        </TouchableOpacity>
+                    );
+                }
+                if (item.type === 'trending') {
+                    return (
+                        <>
+                            <Text style={styles.sectionTitle}>Top Trending</Text>
+                            <FlatList
+                                horizontal
+                                data={trending}
+                                renderItem={({ item }) => renderStory(item)}
+                                keyExtractor={(item) => item.id}
+                                showsHorizontalScrollIndicator={false}
+                                contentContainerStyle={{ paddingHorizontal: 10 }}
+                            />
+                        </>
+                    );
+                }
+                if (item.type === 'newStories') {
+                    return (
+                        <>
+                            <Text style={styles.sectionTitle}>Truyện mới</Text>
+                            <FlatList
+                                data={stories}
+                                renderItem={({ item }) => renderStory(item)} // Sử dụng hàm renderStory
+                                keyExtractor={(item) => item.id}
+                                numColumns={2}
+                                contentContainerStyle={styles.newStories}
+                            />
+                        </>
+                    );
+                }
+                if (item.type === 'viewAllButton') {
+                    return (
+                        <TouchableOpacity style={styles.viewAllButton} onPress={() => navigation.navigate('List')}>
+                            <Text style={styles.viewAllText}>Xem danh sách truyện đã lưu</Text>
+                        </TouchableOpacity>
+                    );
+                }
+            }}
+            keyExtractor={(item, index) => index.toString()}  // Key cho FlatList
+            ListHeaderComponent={() => <View style={{ height: 10 }} />}  // Phần đầu của List
+        />
     );
 }
 

@@ -8,7 +8,7 @@ import AppNavigation from './Info/nab';
 import Admin from './Info/admin';
 import Profile from './Info/profile';
 import Search from './Info/search';
-import Truyen from './Info/truyen';
+
 import List from './Info/list';
 import Home from './Info/home';
 import Chap from './Info/chap';

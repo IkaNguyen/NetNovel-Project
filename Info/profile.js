@@ -73,9 +73,9 @@ export default function Profile() {
 
   return (
     <View style={styles.container}>
-      <ImageBackground source={{ uri: coverPhotoKey }} style={styles.coverPhoto}> {/* Use cover photo */}
+      <ImageBackground source={{ uri: coverPhotoKey }} style={styles.coverPhoto}>
         <View style={styles.profileContainer}>
-          {/* Hide avatar, cover photo, and username if isHidden is true */}
+         
           {!isHidden && ( // Only render these elements if isHidden is false
             <>
               <Image
@@ -90,24 +90,24 @@ export default function Profile() {
 
           {editMode ? (
             <>
-              {/* Input field for name */}
+         
               <TextInput
                 style={styles.input}
                 value={newName}
                 onChangeText={setNewName}
               />
               
-              {/* Button to change avatar */}
+              
               <TouchableOpacity onPress={handleAvatarChange} style={styles.changeAvatarButton}>
                 <Text style={styles.changeAvatarText}>Thay đổi avatar</Text>
               </TouchableOpacity>
               
-              {/* Button to change cover photo */}
+            
               <TouchableOpacity onPress={handleCoverPhotoChange} style={styles.changeCoverPhotoButton}>
                 <Text style={styles.changeCoverPhotoText}>Thay đổi ảnh bìa</Text>
               </TouchableOpacity>
 
-              {/* Buttons for saving or cancelling */}
+             
               <View style={styles.buttonContainer}>
                 <TouchableOpacity onPress={handleSave} style={styles.saveButton}>
                   <Text style={styles.saveButtonText}>Lưu</Text>
@@ -119,10 +119,10 @@ export default function Profile() {
             </>
           ) : (
             <>
-              {/* Button to enable edit mode */}
+
               <TouchableOpacity onPress={() => { 
                 setEditMode(true); 
-                setIsHidden(true); // Hide the avatar, name, and cover photo when entering edit mode
+                setIsHidden(true); 
               }} style={styles.editButton}>
                 <Text style={styles.editButtonText}>+</Text>
               </TouchableOpacity>

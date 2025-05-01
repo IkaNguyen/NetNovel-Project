@@ -76,7 +76,7 @@ export default function AppNavigation() {
     <UserProvider>
       <Stack.Navigator>
         <Stack.Screen
-          name="Main"
+          name="Mainn"
           component={TabNavigator} // TabNavigator cho màn hình chính
           options={{ headerShown: false }}
         />
