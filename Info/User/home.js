@@ -1,8 +1,8 @@
 import React, { useContext, useEffect, useState } from 'react';
 import { View, Text, Image, TouchableOpacity, FlatList, StyleSheet } from 'react-native';
-import { UserContext } from './UserContext';
+import { UserContext } from '../UserContext';
 import { useNavigation } from '@react-navigation/native';
-import { getAllStories } from './storage';
+import { getAllStories } from '../storage';
 
 const DEFAULT_IMAGE = 'https://i.pinimg.com/736x/d8/6e/79/d86e79e1289410f65e5f5bb8840dd4b7.jpg'; // Đường dẫn đến ảnh bìa mặc định
 const trending = [...Array(5)].map((_, i) => ({

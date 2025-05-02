@@ -4,17 +4,17 @@ import { Text, SafeAreaView, StyleSheet, Image, View, TouchableOpacity } from 'r
 import InfoSample from './Info/InfoSample';
 import Login from './Info/login';
 import Register from './Info/register';
-import AppNavigation from './Info/nab';
-import Admin from './Info/admin';
-import Profile from './Info/profile';
-import Search from './Info/search';
+import AppNavigation from './Info/User/nab';
+import Admin from './Info/Admin/admin';
+import Profile from './Info/User/profile';
+import Search from './Info/User/search';
 
-import List from './Info/list';
-import Home from './Info/home';
-import Chap from './Info/chap';
+import List from './Info/User/list';
+import Home from './Info/User/home';
+import Chap from './Info/User/chap';
 
 
-import ChapterScreen from './Info/ChapterScreen';
+import ChapterScreen from './Info/User/ChapterScreen';
 const Stack = createStackNavigator();
 export default function App() {
   return (

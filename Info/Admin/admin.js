@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { TextInput, Button, View, StyleSheet, Alert, Image } from 'react-native';
-import { getAllStories, saveAllStories } from './storage'; 
+import { getAllStories, saveAllStories } from '../storage'; 
 import * as ImagePicker from 'expo-image-picker'; 
 
 export default function Admin() {

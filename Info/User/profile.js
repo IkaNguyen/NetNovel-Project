@@ -1,6 +1,6 @@
 import React, { useState, useContext, useEffect } from 'react';
 import { View, Text, TextInput, TouchableOpacity, ImageBackground, Image, StyleSheet } from 'react-native';
-import { UserContext } from './UserContext';
+import { UserContext } from '../UserContext';
 import * as ImagePicker from 'expo-image-picker';
 
 export default function Profile() {

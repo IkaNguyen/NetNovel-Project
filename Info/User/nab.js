@@ -6,7 +6,7 @@ import List from './list';
 import Search from './search';
 import Profile from './profile';
 import Truyen from './truyen';
-import { UserProvider } from './UserContext';
+import { UserProvider } from '../UserContext';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 
 const Stack = createNativeStackNavigator();

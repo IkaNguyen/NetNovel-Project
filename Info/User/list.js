@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, FlatList, TouchableOpacity, StyleSheet, Alert } from 'react-native';
-import { getSavedStories, removeSavedStory } from './storage'; // Import các hàm từ storage
+import { getSavedStories, removeSavedStory } from '../storage'; // Import các hàm từ storage
 
 export default function List() {
   const [savedStories, setSavedStories] = useState([]); // Dùng để lưu các truyện đã lưu

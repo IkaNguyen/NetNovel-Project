@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { View, Text, Image, FlatList, TouchableOpacity, StyleSheet, ScrollView } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { getAllStories, saveAllStories } from './storage';
+import { getAllStories, saveAllStories } from '../storage';
 
 export default function Truyen({ route, navigation }) {
     const { story } = route.params; // Nhận thông tin quyển truyện từ route

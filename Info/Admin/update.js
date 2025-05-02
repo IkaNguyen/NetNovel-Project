@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, FlatList, TouchableOpacity, StyleSheet, Alert, TextInput, Modal, Button } from 'react-native';
-import { getAllStories, saveAllStories } from './storage';
+import { getAllStories, saveAllStories } from '../storage';
 
 export default function Seen({ navigation }) {
   const [allStories, setAllStories] = useState([]);
