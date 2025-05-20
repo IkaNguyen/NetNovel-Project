@@ -27,7 +27,7 @@ const Profile = ({ navigation }) => {
 };
 
 const styles = StyleSheet.create({
-  container: { flex: 1, alignItems: 'center' },
+  container: { flex: 1, alignItems: 'center',  marginTop: 20 },
 
   coverPhoto: {
     width: '100%',
@@ -71,10 +71,10 @@ const styles = StyleSheet.create({
     position: 'absolute',
     bottom: 30,
     right: 30,
-    backgroundColor: '#007BFF',
+    backgroundColor: '#3D8361',
     borderRadius: 30,
-    width: 60,
-    height: 60,
+    width: 40,
+    height: 40,
     justifyContent: 'center',
     alignItems: 'center',
     zIndex: 10,
@@ -82,7 +82,7 @@ const styles = StyleSheet.create({
 
   editButtonText: {
     color: '#fff',
-    fontSize: 30,
+    fontSize: 20,
     fontWeight: 'bold',
   },
 });

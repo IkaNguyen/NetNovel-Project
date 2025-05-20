@@ -11,25 +11,30 @@ import {
 import { UserContext } from '../UserContext';
 
 const Sua = ({ navigation }) => {
-  const { user, updateUser } = useContext(UserContext);
-  // Local state để chỉnh sửa thông tin
+  const { user, updateUser, logout } = useContext(UserContext);
+
   const [name, setName] = useState(user.name);
   const [avatar, setAvatar] = useState(user.avatar);
   const [coverPhoto, setCoverPhoto] = useState(user.coverPhoto);
-  // Xử lý lưu thông tin
+
   const handleSave = async () => {
     try {
-      await updateUser({ name, avatar, coverPhoto });
+      await updateUser({
+        id: user.id, // giữ lại ID
+        name,
+        avatar,
+        coverPhoto,
+      });
       Alert.alert('✅ Thành công', 'Thông tin đã được cập nhật.');
       navigation.goBack();
     } catch (error) {
       Alert.alert('❌ Lỗi', 'Không thể lưu thông tin.');
     }
   };
-  // Đăng xuất nhưng vẫn giữ lại thông tin
+
   const handleLogout = async () => {
     try {
-      await updateUser({ id: null }); // Chỉ xóa ID để đăng xuất, không xoá user
+      await logout();
       navigation.navigate('Login');
     } catch (error) {
       Alert.alert('❌ Lỗi', 'Không thể đăng xuất.');
@@ -63,11 +68,11 @@ const Sua = ({ navigation }) => {
       />
 
       <TouchableOpacity style={styles.saveButton} onPress={handleSave}>
-        <Text style={styles.saveButtonText}>💾 Lưu Thay Đổi</Text>
+        <Text style={styles.saveButtonText}> Lưu Thay Đổi</Text>
       </TouchableOpacity>
 
       <TouchableOpacity style={styles.logoutButton} onPress={handleLogout}>
-        <Text style={styles.logoutButtonText}>🚪 Đăng Xuất</Text>
+        <Text style={styles.logoutButtonText}>Đăng Xuất</Text>
       </TouchableOpacity>
     </ScrollView>
   );
@@ -75,46 +80,73 @@ const Sua = ({ navigation }) => {
 
 const styles = StyleSheet.create({
   container: {
-    padding: 20,
-    paddingBottom: 40,
+    padding: 15,
+    paddingBottom: 50,
     flexGrow: 1,
-    backgroundColor: '#fff',
+    backgroundColor: '#FAFAFA', // nền sáng nhẹ, trung tính
   },
   label: {
-    fontSize: 16,
-    fontWeight: 'bold',
-    marginTop: 20,
+    fontSize: 18,
+    fontWeight: '600',
+    color: '#444', // màu chữ tối nhưng nhẹ hơn đen
+    marginTop: 15,
+    marginBottom: 8,
+    letterSpacing: 0.4,
   },
   input: {
     borderWidth: 1,
-    borderColor: '#ccc',
-    borderRadius: 5,
-    padding: 10,
-    marginTop: 5,
+    borderColor: '#CCC', // viền nhạt, nhẹ nhàng
+    borderRadius: 10,
+    paddingVertical: 10,
+    paddingHorizontal: 14,
+    backgroundColor: '#fff',
+    fontSize: 16,
+    color: '#555',
+    // shadow rất nhẹ nhàng để tạo độ sâu
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 1 },
+    shadowOpacity: 0.08,
+    shadowRadius: 2,
+    elevation: 1,
   },
   saveButton: {
-    backgroundColor: '#28a745',
-    padding: 15,
-    borderRadius: 5,
-    marginTop: 30,
+    backgroundColor: '#3D8361', // xanh xám nhẹ, tinh tế, thanh lịch
+    paddingVertical: 14,
+    borderRadius: 12,
+    marginTop: 25,
     alignItems: 'center',
+    justifyContent: 'center',
+    // shadow nhẹ, tinh tế
+    shadowColor: '#607D8B',
+    shadowOffset: { width: 0, height: 3 },
+    shadowOpacity: 0.2,
+    shadowRadius: 4,
+    elevation: 4,
   },
   saveButtonText: {
-    color: '#fff',
-    fontWeight: 'bold',
-    fontSize: 16,
+    color: '#F5F5F5', // màu chữ sáng nhẹ, dễ nhìn
+    fontWeight: '600',
+    fontSize: 17,
+    letterSpacing: 1,
   },
   logoutButton: {
-    backgroundColor: '#FF5733',
-    padding: 15,
-    borderRadius: 5,
+    backgroundColor: '#3D8361', // đỏ nhạt, không quá chói, nhẹ nhàng
+    paddingVertical: 12,
+    borderRadius: 12,
     marginTop: 15,
     alignItems: 'center',
+    justifyContent: 'center',
+    shadowColor: '#E57373',
+    shadowOffset: { width: 0, height: 3 },
+    shadowOpacity: 0.18,
+    shadowRadius: 4,
+    elevation: 3,
   },
   logoutButtonText: {
-    color: '#fff',
-    fontWeight: 'bold',
-    fontSize: 16,
+    color: '#FFF',
+    fontWeight: '600',
+    fontSize: 17,
+    letterSpacing: 1,
   },
 });
 

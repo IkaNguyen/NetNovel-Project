@@ -3,8 +3,8 @@ import { getUser, saveUser, clearUser } from './storage';
 
 export const UserContext = createContext();
 
-// Thay đổi: Khai báo URL base của MockAPI
-const API_BASE = 'https://6551ea355c69a7790329408a.mockapi.io/day';
+// Base URL của MockAPI
+const API_BASE = 'https://682c340ad29df7a95be5faa8.mockapi.io/netnovel/role';
 
 export const UserProvider = ({ children }) => {
   const defaultUser = {
@@ -20,7 +20,6 @@ export const UserProvider = ({ children }) => {
   const allowedKeys = ['name', 'account', 'avatar', 'coverPhoto', 'role', 'id', 'savedStories'];
   const [user, setUser] = useState(defaultUser);
 
-  // Khi load app hoặc sau login, nếu có id => fetch dữ liệu từ API
   useEffect(() => {
     const loadUser = async () => {
       const stored = await getUser();
@@ -31,39 +30,36 @@ export const UserProvider = ({ children }) => {
           const cleanedRemote = Object.keys(remote)
             .filter(key => allowedKeys.includes(key))
             .reduce((obj, key) => ({ ...obj, [key]: remote[key] }), {});
-          setUser({ ...defaultUser, ...cleanedRemote });
-          await saveUser({ ...defaultUser, ...cleanedRemote });
+          const finalUser = { ...defaultUser, ...cleanedRemote };
+          setUser(finalUser);
+          await saveUser(finalUser);
         } catch (err) {
           console.warn('Không thể fetch user từ API, dùng local cache', err);
           setUser(stored);
         }
       } else if (stored) {
-        // Nếu chỉ có local cache nhưng chưa login, giữ local cache
         setUser({ ...defaultUser, ...stored });
       }
     };
     loadUser();
   }, []);
 
-  // Cập nhật user cả local và remote
   const updateUser = async (newData) => {
     const updated = { ...user, ...newData };
     setUser(updated);
     await saveUser(updated);
 
-    // Nếu có id thì đẩy lên MockAPI
     if (updated.id) {
       try {
+        const payload = allowedKeys.reduce((obj, key) => {
+          obj[key] = updated[key];
+          return obj;
+        }, {});
+
         await fetch(`${API_BASE}/${updated.id}`, {
           method: 'PUT',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            name: updated.name,
-            avatar: updated.avatar,
-            coverPhoto: updated.coverPhoto,
-            role: updated.role
-            
-          }),
+          body: JSON.stringify(payload),
         });
       } catch (e) {
         console.warn('Cập nhật API thất bại:', e);
@@ -71,7 +67,6 @@ export const UserProvider = ({ children }) => {
     }
   };
 
-  // Đăng xuất: xoá toàn bộ cache và state
   const logout = async () => {
     setUser(defaultUser);
     await clearUser();

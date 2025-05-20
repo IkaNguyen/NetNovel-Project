@@ -1,6 +1,6 @@
 import React, { useState, useCallback, useContext } from 'react';
 import { View, Text, FlatList, TouchableOpacity, StyleSheet, Alert, Image } from 'react-native';
-import { getSavedStories, removeSavedStory } from '../storage';
+import { getSavedStories, removeSavedStory, saveSavedStories } from '../storage';
 import { useFocusEffect, useNavigation } from '@react-navigation/native';
 import { UserContext } from '../UserContext';
 
@@ -16,7 +16,20 @@ export default function List() {
       const fetchSavedStories = async () => {
         try {
           const stories = await getSavedStories(user.id);
-          setSavedStories(stories);
+
+          // ✅ Bổ sung author nếu thiếu
+          const fixedStories = stories.map(story => ({
+            ...story,
+            author: story.author || 'Không rõ'
+          }));
+
+          // ✅ Nếu có sự thay đổi, lưu lại
+          const changed = stories.some((s, i) => !s.author && fixedStories[i].author);
+          if (changed) {
+            await saveSavedStories(user.id, fixedStories);
+          }
+
+          setSavedStories(fixedStories);
         } catch (error) {
           Alert.alert('Lỗi', 'Không thể tải danh sách truyện đã lưu');
         }
@@ -39,15 +52,13 @@ export default function List() {
   const handlePressStory = (story) => {
     const storyWithChapters = {
       ...story,
-      chapters: story.chapters || []  // ✅ Bảo vệ tránh lỗi undefined
+      chapters: story.chapters || []
     };
     navigation.navigate('Truyen', { story: storyWithChapters });
   };
-  
+
   const renderStory = ({ item }) => {
-    const imageUri = item.coverImage && item.coverImage.trim() !== ''
-      ? item.coverImage
-      : DEFAULT_IMAGE;
+    const imageUri = item.coverImage?.trim() ? item.coverImage : DEFAULT_IMAGE;
 
     return (
       <TouchableOpacity onPress={() => handlePressStory(item)} style={styles.storyItem}>
@@ -58,6 +69,8 @@ export default function List() {
         />
         <View style={styles.storyInfo}>
           <Text style={styles.storyTitle}>{item.title}</Text>
+          <Text style={styles.storyAuthor}>Tác giả: {item.author || 'Không rõ'}</Text>
+          <Text style={styles.chapterCount}>Số chương: {item.chapters?.length || 0}</Text>
         </View>
         <TouchableOpacity onPress={() => handleRemoveStory(item.id)} style={styles.removeButton}>
           <Text style={styles.removeButtonText}>Xóa</Text>
@@ -68,19 +81,17 @@ export default function List() {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.sectionTitle}>Các truyện đã lưu</Text>
       <FlatList
         data={savedStories}
         renderItem={renderStory}
-        keyExtractor={item => item.id ? item.id.toString() : Math.random().toString()}
+        keyExtractor={item => item.id?.toString() || Math.random().toString()}
       />
     </View>
   );
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, padding: 10 },
-  sectionTitle: { fontSize: 20, marginBottom: 10 },
+  container: { flex: 1, padding: 10,  marginTop: 20 },
   storyItem: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -103,6 +114,14 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: '500',
     color: '#333'
+  },
+  storyAuthor: {
+    fontSize: 14,
+    color: '#666'
+  },
+  chapterCount: {
+    fontSize: 13,
+    color: '#999'
   },
   removeButton: {
     backgroundColor: 'red',

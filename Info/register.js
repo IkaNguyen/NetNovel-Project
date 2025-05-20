@@ -111,9 +111,9 @@ const Register = ({ navigation }) => {
             backgroundColor="#DB4437"
           />
         </View>
-        {/* tạo ô input */}
+      
         <View style={styles.containerInput}>
-          {/* Ô nhập Họ và tên */}
+         
           <View style={styles.inputContainer}>
             <TextInput
               ref={nameInputRef}

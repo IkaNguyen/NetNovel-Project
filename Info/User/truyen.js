@@ -23,10 +23,12 @@ export default function Truyen({ route, navigation }) {
       const newStory = {
         id: currentStoryId,
         title: story.title,
+        author: story.author || 'Không rõ', 
         coverImage: story.coverImage || defaultCoverImage,
         genres: story.genres || [],
         chapters: story.chapters || [], 
         description: story.description || story.details || '', 
+
       };
 
       const exists = savedStories.some(s => s.id === currentStoryId);
@@ -83,22 +85,75 @@ export default function Truyen({ route, navigation }) {
 }
 
 const styles = StyleSheet.create({
-  container: { padding: 16, backgroundColor: '#fff', flex: 1 },
-  cover: { width: '100%', height: 200, borderRadius: 10 },
-  title: { fontSize: 24, fontWeight: 'bold', marginTop: 10 },
-  genre: { fontSize: 16, color: '#555', marginVertical: 5 },
-  description: { fontSize: 14, marginVertical: 10, lineHeight: 20 },
-  sectionTitle: { fontSize: 18, fontWeight: 'bold', marginTop: 20 },
-  chapterItem: { paddingVertical: 10, borderBottomWidth: 1, borderBottomColor: '#ddd' },
-  chapterText: { fontSize: 16 },
+  container: {
+    flex: 1,
+    backgroundColor: '#FAFAFA', // nền rất nhẹ nhàng
+    paddingHorizontal: 20,
+    paddingTop: 20,
+  },
+  cover: {
+    width: '100%',
+    height: 240,
+    borderRadius: 16,
+    backgroundColor: '#E5E5E5',
+    resizeMode: 'cover',
+  },
+  title: {
+    fontSize: 24,
+    fontWeight: '700',
+    color: '#2C2C2C',
+    marginTop: 16,
+    letterSpacing: 0.5,
+  },
+  genre: {
+    fontSize: 14,
+    color: '#6E6E6E',
+    marginTop: 8,
+    fontStyle: 'italic',
+  },
+  description: {
+    fontSize: 15,
+    color: '#4A4A4A',
+    marginTop: 12,
+    lineHeight: 22,
+  },
+  sectionTitle: {
+    fontSize: 18,
+    fontWeight: '600',
+    color: '#3A3A3A',
+    marginTop: 24,
+    marginBottom: 12,
+    borderBottomWidth: 1,
+    borderBottomColor: '#DADADA',
+    paddingBottom: 6,
+  },
+  chapterItem: {
+    paddingVertical: 12,
+    borderBottomWidth: 1,
+    borderBottomColor: '#EAEAEA',
+  },
+  chapterText: {
+    fontSize: 15,
+    color: '#333',
+  },
   saveButton: {
     position: 'absolute',
     bottom: 30,
     right: 30,
-    backgroundColor: '#007BFF',
-    padding: 15,
-    borderRadius: 30,
-    alignItems: 'center',
+    backgroundColor: '#3D8361', // xanh olive hiện đại
+    paddingVertical: 12,
+    paddingHorizontal: 22,
+    borderRadius: 28,
+    shadowColor: '#3D8361',
+    shadowOffset: { width: 0, height: 6 },
+    shadowOpacity: 0.25,
+    shadowRadius: 8,
+    elevation: 5,
   },
-  saveButtonText: { color: '#fff', fontWeight: 'bold' },
+  saveButtonText: {
+    color: '#FFFFFF',
+    fontSize: 15,
+    fontWeight: '600',
+    letterSpacing: 0.5,
+  },
 });
