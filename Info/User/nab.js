@@ -8,7 +8,7 @@ import Profile from './profile';
 import Truyen from './truyen';
 import { UserProvider } from '../UserContext';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
-
+import Login from '../login';
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
 
@@ -73,18 +73,19 @@ function TabNavigator() {
 // AppNavigation: Gói cả TabNavigator và StackNavigator
 export default function AppNavigation() {
   return (
-    <UserProvider>
+  
       <Stack.Navigator>
         <Stack.Screen
           name="Mainn"
           component={TabNavigator} // TabNavigator cho màn hình chính
           options={{ headerShown: false }}
         />
+        
         <Stack.Screen
           name="Truyen"
           component={Truyen} // Truyen là màn hình chi tiết của truyện
         />
       </Stack.Navigator>
-    </UserProvider>
+   
   );
 }

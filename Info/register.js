@@ -51,7 +51,7 @@ const Register = ({ navigation }) => {
     try {
       // Gửi yêu cầu POST đến API
       const response = await fetch(
-        "https://6551ea355c69a7790329408a.mockapi.io/day",
+        "https://682c340ad29df7a95be5faa8.mockapi.io/netnovel/role",
         {
           method: "POST",
           headers: {

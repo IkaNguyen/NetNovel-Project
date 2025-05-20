@@ -1,70 +1,83 @@
-import React, { useState, useContext, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { View, TextInput, FlatList, Text, TouchableOpacity, StyleSheet, Image } from 'react-native';
-import { UserContext } from '../UserContext';
 import { useNavigation } from '@react-navigation/native';
 import { Ionicons } from '@expo/vector-icons';
 
+const API_URL = 'http://192.168.1.78:5000';
 const defaultImage = 'https://i.pinimg.com/736x/d8/6e/79/d86e79e1289410f65e5f5bb8840dd4b7.jpg';
 
 export default function Search() {
-  const { allStories } = useContext(UserContext);
   const navigation = useNavigation();
   const [query, setQuery] = useState('');
-  const [newestStories, setNewestStories] = useState([]);
+  const [searchResults, setSearchResults] = useState([]);
+  const [latestStories, setLatestStories] = useState([]);
 
-  // Ensure that allStories is not undefined or null before filtering
-  const filteredStories = query && allStories
-    ? allStories.filter(story =>
-        story.title.toLowerCase().includes(query.toLowerCase())
-      )
-    : [];
-
-  // Lọc các truyện mới đăng trong vòng 7 ngày qua
   useEffect(() => {
-    if (allStories) {
-      const latestStories = allStories
-        .filter(story => {
-          const currentDate = new Date();
-          const storyDate = new Date(story.createdAt);
-          const timeDiff = currentDate - storyDate;
-          const daysDiff = timeDiff / (1000 * 3600 * 24);
-          return daysDiff <= 7;
-        })
-        .slice(0, 5);
-        
-      setNewestStories(latestStories);
+    const fetchLatestStories = async () => {
+      try {
+        const response = await fetch(`${API_URL}/index`);
+        if (!response.ok) throw new Error('Failed to fetch stories');
+        const allStories = await response.json();
+        const last10Stories = allStories.slice(-10);
+        setLatestStories(last10Stories);
+      } catch (error) {
+        console.error('Lỗi khi tải truyện:', error.message);
+      }
+    };
+
+    fetchLatestStories();
+  }, []);
+
+  const handleSearch = async (text) => {
+    setQuery(text);
+
+    if (text.trim() === '') {
+      setSearchResults([]);
+      return;
     }
-  }, [allStories]);
 
-  // Hàm render tên truyện trong kết quả tìm kiếm
-  const renderSearchResult = ({ item }) => {
-    return (
-      <TouchableOpacity
-        style={styles.searchItem}
-        onPress={() => navigation.navigate('Truyen', { story: item })}
-      >
-        <Text style={styles.storyTitle}>{item.title}</Text>
-      </TouchableOpacity>
-    );
+    try {
+      const response = await fetch(`${API_URL}/index`);
+      if (!response.ok) throw new Error('Failed to fetch for search');
+
+      const allStories = await response.json();
+      const filtered = allStories.filter(story =>
+        story.title.toLowerCase().includes(text.toLowerCase())
+      );
+
+      setSearchResults(filtered);
+    } catch (error) {
+      console.error('Lỗi khi tìm kiếm:', error.message);
+    }
   };
 
-  // Hàm render truyện trong gợi ý mới đăng
-  const renderNewestStory = ({ item }) => {
-    const imageSource = item.image ? { uri: item.image } : { uri: defaultImage };
-    return (
-      <TouchableOpacity
-        style={styles.storyItem}
-        onPress={() => navigation.navigate('Truyen', { story: item })}
-      >
-        <Image source={imageSource} style={styles.storyImage} />
-        <Text style={styles.storyTitle}>{item.title}</Text>
-      </TouchableOpacity>
-    );
-  };
+  // Kết quả tìm kiếm: bìa bên trái, tên bên phải
+  const renderSearchResultItem = ({ item }) => (
+    <TouchableOpacity
+      style={styles.searchResultItem}
+      onPress={() => navigation.navigate('Truyen', { story: item })}
+    >
+      <Image
+        source={{ uri: item.coverImage || defaultImage }}
+        style={styles.searchResultImage}
+      />
+      <Text style={styles.searchResultTitle}>{item.title}</Text>
+    </TouchableOpacity>
+  );
 
-  const handleClearSearch = () => {
-    setQuery('');
-  };
+  // Gợi ý 10 truyện: 3 cột, bìa trên, tên dưới
+  const renderSuggestedItem = ({ item }) => (
+    <TouchableOpacity
+      style={styles.suggestedItem}
+      onPress={() => navigation.navigate('Truyen', { story: item })}
+    >
+      <Image
+        source={{ uri: item.coverImage || defaultImage }}
+        style={styles.suggestedImage}
+      />
+      <Text style={styles.suggestedTitle}>{item.title}</Text>
+    </TouchableOpacity>
+  );
 
   return (
     <View style={styles.container}>
@@ -73,10 +86,10 @@ export default function Search() {
           style={styles.searchInput}
           placeholder="Tìm kiếm truyện..."
           value={query}
-          onChangeText={setQuery}
+          onChangeText={handleSearch}
         />
         {query.length > 0 && (
-          <TouchableOpacity onPress={handleClearSearch} style={styles.clearButton}>
+          <TouchableOpacity onPress={() => handleSearch('')} style={styles.clearButton}>
             <Ionicons name="close-circle" size={24} color="gray" />
           </TouchableOpacity>
         )}
@@ -85,24 +98,26 @@ export default function Search() {
       {query.length > 0 && (
         <>
           <Text style={styles.sectionTitle}>
-            {filteredStories.length > 0 ? 'Kết quả tìm kiếm' : 'Không tìm thấy kết quả'}
+            {searchResults.length > 0 ? 'Kết quả tìm kiếm' : 'Không tìm thấy kết quả'}
           </Text>
           <FlatList
-            data={filteredStories}
-            renderItem={renderSearchResult}
-            keyExtractor={item => `${item.id}`}
+            data={searchResults}
+            renderItem={renderSearchResultItem}
+            keyExtractor={item => item._id}
+            style={styles.searchResultsList}
           />
         </>
       )}
 
-      {newestStories.length > 0 && (
+      {latestStories.length > 0 && query.length === 0 && (
         <>
-          <Text style={styles.sectionTitle}>Gợi Ý Truyện Mới Đăng</Text>
+          <Text style={styles.sectionTitle}>Gợi Ý 10 Truyện Cuối</Text>
           <FlatList
-            data={newestStories}
-            renderItem={renderNewestStory}
-            keyExtractor={item => `${item.id}`}
-            horizontal={true}
+            data={latestStories}
+            renderItem={renderSuggestedItem}
+            keyExtractor={item => item._id}
+            numColumns={3}
+            contentContainerStyle={styles.flatListContainer}
           />
         </>
       )}
@@ -111,56 +126,64 @@ export default function Search() {
 }
 
 const styles = StyleSheet.create({
-  container: { 
-    flex: 1, 
-    padding: 10,
-    backgroundColor: '#f9f9f9' 
-  },
-  searchContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    width: '100%',
-    marginBottom: 10,
-  },
+  container: { flex: 1, padding: 10, backgroundColor: '#f9f9f9' },
+  searchContainer: { flexDirection: 'row', alignItems: 'center', marginBottom: 10 },
   searchInput: {
+    flex: 1,
     height: 40,
     borderColor: '#ccc',
     borderWidth: 1,
     paddingHorizontal: 10,
     borderRadius: 5,
-    flex: 1,
     backgroundColor: '#fff',
   },
-  clearButton: {
-    marginLeft: 10,
-    padding: 5,
+  clearButton: { marginLeft: 10 },
+  sectionTitle: { fontSize: 16, fontWeight: 'bold', marginBottom: 8 },
+
+  // ========== Kết quả tìm kiếm ==========
+  searchResultsList: {
+    marginTop: 10,
   },
-  sectionTitle: {
-    fontSize: 16,
-    fontWeight: 'bold',
-    marginBottom: 8,
-    color: '#333',
-  },
-  searchItem: {
-    padding: 10,
-    borderBottomWidth: 1,
-    borderColor: '#eee',
-  },
-  storyItem: {
+  searchResultItem: {
     flexDirection: 'row',
-    padding: 10,
+    alignItems: 'center',
+    paddingVertical: 10,
     borderBottomWidth: 1,
     borderColor: '#eee',
-    alignItems: 'center',
+    marginBottom: 10,
   },
-  storyImage: {
-    width: 100,
-    height: 140,
-    borderRadius: 8,
-    marginRight: 10,
+  searchResultImage: {
+    width: 60,
+    height: 80,
+    marginRight: 15,
+    borderRadius: 5,
   },
-  storyTitle: {
-    fontSize: 18,
+  searchResultTitle: {
+    fontSize: 14,
     flex: 1,
+    textAlign: 'left',
+  },
+
+  // ========== Gợi ý truyện (3 cột) ==========
+  flatListContainer: {
+    paddingBottom: 10,
+  },
+  suggestedItem: {
+    flexDirection: 'column',
+    alignItems: 'center',
+    padding: 10,
+    width: '30%',
+    marginBottom: 20,
+  },
+  suggestedImage: {
+    width: 100,
+    height: 130,
+    marginBottom: 8,
+    borderRadius: 5,
+  },
+  suggestedTitle: {
+    fontSize: 14,
+    textAlign: 'center',
+    width: '100%',
   },
 });

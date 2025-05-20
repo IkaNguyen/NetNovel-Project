@@ -1,53 +1,79 @@
-import React, { useContext, useEffect, useState } from 'react';
+import React, { useEffect, useState, useContext } from 'react';
 import { View, Text, Image, TouchableOpacity, FlatList, StyleSheet } from 'react-native';
-import { UserContext } from '../UserContext';
 import { useNavigation } from '@react-navigation/native';
-import { getAllStories } from '../storage';
+import { saveAllStories } from '../storage'; // Đảm bảo import hàm saveAllStories
+import { UserContext } from '../UserContext';
 
-const DEFAULT_IMAGE = 'https://i.pinimg.com/736x/d8/6e/79/d86e79e1289410f65e5f5bb8840dd4b7.jpg'; // Đường dẫn đến ảnh bìa mặc định
-const trending = [...Array(5)].map((_, i) => ({
-    id: `${i}`,
-    title: `Trending ${i + 1}`,
-    image: `https://nld.mediacdn.vn/2020/5/29/photo-10-15907421461051559208459.jpg`
-}));
+const DEFAULT_IMAGE = 'https://i.pinimg.com/736x/e0/2c/be/e02cbe2ac89d57920544a21d43fb1b34.jpg';
 
 export default function Home() {
-    const { user, setAllStories, allStories } = useContext(UserContext);
     const [stories, setStories] = useState([]);
+    const [trending, setTrending] = useState([]);
+    const [dataFetched, setDataFetched] = useState(false); // State để theo dõi dữ liệu đã fetch
     const navigation = useNavigation();
+    const { user } = useContext(UserContext);
 
     const renderStory = (item) => {
-        const imageSource = item.image ? item.image : DEFAULT_IMAGE; // Kiểm tra ảnh bìa
+        if (!item || !item._id || !item.title || !item.author) {
+            console.error('Invalid story item:', item);
+            return null;
+        }
+        const imageUri = item.coverImage || DEFAULT_IMAGE;
         return (
-            <TouchableOpacity 
-                onPress={() => navigation.navigate('Truyen', { story: item })} // Truyền toàn bộ thông tin của quyển truyện
-                style={styles.storyItem} 
-                key={item.id}
+            <TouchableOpacity
+                onPress={() => navigation.navigate('Truyen', { story: item })}
+                style={styles.storyItem}
+                key={item._id.toString()}
             >
-                <Image source={{ uri: imageSource }} style={styles.storyImage} />
+                <Image source={{ uri: imageUri }} style={styles.storyImage} />
                 <Text style={styles.storyTitle}>{item.title}</Text>
+                <Text style={styles.storyAuthor}>Tác giả: {item.author}</Text>
             </TouchableOpacity>
         );
     };
 
     useEffect(() => {
         const fetchData = async () => {
-            const data = await getAllStories();
-            setStories(data);
-            setAllStories(data);
+            try {
+                const response = await fetch('http://192.168.1.78:5000/index');
+                if (!response.ok) {
+                    console.error('Error fetching data:', response.statusText);
+                    return;
+                }
+                const data = await response.json();
+
+                if (Array.isArray(data)) {
+                    if (!dataFetched) {
+                        console.log('Fetched data:', data);
+                        setDataFetched(true);
+                    }
+                    setStories(data);
+                    saveAllStories(data); // Lưu dữ liệu truyện vào AsyncStorage
+                    setTrending(data.slice(0, 5));
+                } else {
+                    console.error('Fetched data is not an array:', data);
+                }
+            } catch (error) {
+                console.error('Error fetching data:', error);
+            }
         };
 
         fetchData();
-    }, [allStories]);
+    }, [dataFetched]);
 
     return (
         <FlatList
-            data={[{ type: 'header' }, { type: 'trending' }, { type: 'newStories' }, { type: 'viewAllButton' }]}  // Danh sách các phần trong trang Home
+            data={[{ type: 'header' }, { type: 'trending' }, { type: 'newStories' }, { type: 'viewAllButton' }]}
             renderItem={({ item }) => {
                 if (item.type === 'header') {
                     return (
                         <TouchableOpacity style={styles.header} onPress={() => navigation.navigate('Profile')}>
-                            <Image source={{ uri: user.avatar }} style={styles.avatar} />
+                            <Image
+                                source={{
+                                    uri: user.avatar || DEFAULT_IMAGE,
+                                }}
+                                style={styles.avatar}
+                            />
                             <View style={{ marginLeft: 10 }}>
                                 <Text style={styles.username}>{user.name}</Text>
                                 <Text style={styles.profileText}>Trang cá nhân →</Text>
@@ -63,7 +89,7 @@ export default function Home() {
                                 horizontal
                                 data={trending}
                                 renderItem={({ item }) => renderStory(item)}
-                                keyExtractor={(item) => item.id}
+                                keyExtractor={(item) => item._id.toString()}
                                 showsHorizontalScrollIndicator={false}
                                 contentContainerStyle={{ paddingHorizontal: 10 }}
                             />
@@ -76,8 +102,8 @@ export default function Home() {
                             <Text style={styles.sectionTitle}>Truyện mới</Text>
                             <FlatList
                                 data={stories}
-                                renderItem={({ item }) => renderStory(item)} // Sử dụng hàm renderStory
-                                keyExtractor={(item) => item.id}
+                                renderItem={({ item }) => renderStory(item)}
+                                keyExtractor={(item) => item._id.toString()}
                                 numColumns={2}
                                 contentContainerStyle={styles.newStories}
                             />
@@ -91,9 +117,10 @@ export default function Home() {
                         </TouchableOpacity>
                     );
                 }
+                return null;
             }}
-            keyExtractor={(item, index) => index.toString()}  // Key cho FlatList
-            ListHeaderComponent={() => <View style={{ height: 10 }} />}  // Phần đầu của List
+            keyExtractor={(item, index) => index.toString()}
+            ListHeaderComponent={() => <View style={{ height: 10 }} />}
         />
     );
 }
@@ -108,6 +135,7 @@ const styles = StyleSheet.create({
     storyItem: { marginRight: 10, alignItems: 'center', width: 100 },
     storyImage: { width: 100, height: 140, borderRadius: 8 },
     storyTitle: { textAlign: 'center', marginTop: 5 },
+    storyAuthor: { textAlign: 'center', fontSize: 12, color: 'gray' },
     newStories: { flexDirection: 'column', paddingHorizontal: 10 },
     viewAllButton: { marginTop: 20, alignItems: 'center' },
     viewAllText: { fontSize: 16, color: 'blue' },

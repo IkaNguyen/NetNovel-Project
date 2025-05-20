@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import {
   View,
   TouchableOpacity,
@@ -10,13 +10,12 @@ import {
   Alert,
 } from "react-native";
 import Icon from "react-native-vector-icons/FontAwesome";
+import { UserContext } from './UserContext'; // Đảm bảo đường dẫn đúng
 
 const Login = ({ navigation }) => {
+  const { updateUser } = useContext(UserContext); // Sử dụng useContext để lấy updateUser
+  const [isLogged, setIsLogged] = useState(false); // Trạng thái để kiểm soát log
 
-
-  {
-    /* tạo component nút */
-  }
   const ButtonWithIcon = ({ iconName, text, color, backgroundColor }) => {
     return (
       <TouchableOpacity style={[styles.button, { backgroundColor }]}>
@@ -27,46 +26,52 @@ const Login = ({ navigation }) => {
       </TouchableOpacity>
     );
   };
-  {
-    /* checkbox */
-  }
-  const [isChecked, setIsChecked] = useState(false);
 
+  const [isChecked, setIsChecked] = useState(false);
   const handleCheckboxPress = () => {
     setIsChecked(!isChecked);
   };
 
-  // login
   const [account, setAccount] = useState("");
   const [password, setPassword] = useState("");
+
   const handleLogin = async () => {
     try {
-      // Gửi yêu cầu GET đến API để lấy dữ liệu
-      const response = await fetch(
-        "https://6551ea355c69a7790329408a.mockapi.io/day"
-      );
+      const response = await fetch("https://682c340ad29df7a95be5faa8.mockapi.io/netnovel/role");
       const data = await response.json();
-
-      // Kiểm tra xem tài khoản và mật khẩu nhập vào có trùng khớp với dữ liệu từ API hay không
-      const user = data.find(
-        (item) => item.account === account && item.pass === password
-      );
-
+  
+      const user = data.find(item => item.account === account && item.pass === password);
+  
       if (user) {
-        // Kiểm tra vai trò của người dùng và chuyển hướng tới trang tương ứng
-        if (user.role === "admin") {
-          navigation.navigate("Admin"); // y chang
-        } else if (user.role === "user") {
-          navigation.navigate("Main"); // chỉnh sửa
+        const userDetails = {
+          name: user.name,
+          account: user.account,
+          id: user.id,
+          avatar: user.avatar || 'https://i.pinimg.com/736x/92/5d/be/925dbea5ea9998a2339f1e4b6ada86de.jpg',
+          coverPhoto: user.coverPhoto || 'https://i.pinimg.com/736x/3c/40/db/3c40db60080ca38939be4bd5fb90bf98.jpg',
+          role: user.role,
+        };
+        updateUser(userDetails); // Cập nhật thông tin người dùng
+        
+        // Log thông tin người dùng chỉ một lần
+        if (!isLogged) {
+          console.log(userDetails);
+          setIsLogged(true); // Đánh dấu là đã log
         }
 
+        // Kiểm tra vai trò của người dùng và chuyển hướng tới trang tương ứng
+        if (user.role === "admin") {
+          navigation.navigate("Admin"); // Điều hướng tới trang Admin
+        } else if (user.role === "user") {
+          navigation.navigate("Main"); // Điều hướng tới trang Main
+        }
+  
         // Đặt lại giá trị của các ô TextInput sau khi đăng nhập thành công
         setAccount("");
         setPassword("");
         Alert.alert("Đăng nhập thành công");
-        console.log("Đăng nhập thành công");
       } else {
-        console.log("Đã xảy ra lỗi");
+        Alert.alert("Thông tin đăng nhập không chính xác");
       }
     } catch (error) {
       console.log("Đã xảy ra lỗi:", error);

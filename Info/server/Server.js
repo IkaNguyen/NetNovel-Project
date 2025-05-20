@@ -134,7 +134,26 @@ app.delete("/index/:id", async (req, res) => {
         res.status(500).json({ message: 'Error deleting comic', error: error.message });
     }
 });
-
+// GET: Tìm kiếm truyện theo tiêu đề
+app.get('/search', async (req, res) => {
+    const { q } = req.query;
+  
+    try {
+      if (!q) {
+        return res.status(400).json({ message: 'Missing search query (q)' });
+      }
+  
+      // Tìm truyện có tiêu đề chứa từ khóa (không phân biệt chữ hoa/thường)
+      const regex = new RegExp(q, 'i');
+      const results = await Comic.find({ title: { $regex: regex } });
+  
+      res.json(results);
+    } catch (error) {
+      console.error('Error searching comics:', error);
+      res.status(500).json({ message: 'Error searching comics', error: error.message });
+    }
+  });
+  
 // --- Bắt đầu server ---
 app.listen(PORT, () => {
     console.log(`Server is running on http://localhost:${PORT}`);
