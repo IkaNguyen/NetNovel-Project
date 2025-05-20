@@ -31,7 +31,27 @@ export default function Home() {
             </TouchableOpacity>
         );
     };
-
+    const renderNewStoryy = (item) => {
+        if (!item || !item._id || !item.title || !item.author) {
+          console.error('Invalid story item:', item);
+          return null;
+        }
+        const imageUri = item.coverImage || DEFAULT_IMAGE;
+        return (
+          <TouchableOpacity
+            onPress={() => navigation.navigate('Truyen', { story: item })}
+            style={styles.newStoryItem}
+            key={item._id.toString()}
+          >
+            <Image source={{ uri: imageUri }} style={styles.newStoryImage} />
+            <View style={styles.newStoryTextContainer}>
+              <Text style={styles.newStoryTitle} numberOfLines={2}>{item.title}</Text>
+              <Text style={styles.newStoryAuthor}>Tác giả: {item.author}</Text>
+            </View>
+          </TouchableOpacity>
+        );
+      };
+      
     useEffect(() => {
         const fetchData = async () => {
             try {
@@ -98,18 +118,18 @@ export default function Home() {
                 }
                 if (item.type === 'newStories') {
                     return (
-                        <>
-                            <Text style={styles.sectionTitle}>Truyện mới</Text>
-                            <FlatList
-                                data={stories}
-                                renderItem={({ item }) => renderStory(item)}
-                                keyExtractor={(item) => item._id.toString()}
-                                numColumns={2}
-                                contentContainerStyle={styles.newStories}
-                            />
-                        </>
+                      <>
+                        <Text style={styles.sectionTitle}>Truyện mới</Text>
+                        <FlatList
+                          data={stories}
+                          renderItem={({ item }) => renderNewStoryy(item)}
+                          keyExtractor={(item) => item._id.toString()}
+                          contentContainerStyle={styles.newStoriesContainer}
+                        />
+                      </>
                     );
-                }
+                  }
+                  
                 if (item.type === 'viewAllButton') {
                     return (
                         <TouchableOpacity style={styles.viewAllButton} onPress={() => navigation.navigate('List')}>
@@ -126,7 +146,7 @@ export default function Home() {
 }
 
 const styles = StyleSheet.create({
-    container: { flex: 1 },
+    container: { flex: 1,  padding: 10 },
     header: { flexDirection: 'row', padding: 10, alignItems: 'center' },
     avatar: { width: 60, height: 60, borderRadius: 30 },
     username: { fontSize: 18, fontWeight: 'bold' },
@@ -139,4 +159,57 @@ const styles = StyleSheet.create({
     newStories: { flexDirection: 'column', paddingHorizontal: 10 },
     viewAllButton: { marginTop: 20, alignItems: 'center' },
     viewAllText: { fontSize: 16, color: 'blue' },
+
+    newStories: {
+        paddingRight: 10,
+      },
+      
+      newStoryItem: {
+        flexDirection: 'row',
+        marginVertical: 5,
+        alignItems: 'center',
+        backgroundColor: '#fff',
+        borderRadius: 8,
+        padding: 5,
+        elevation: 2, // shadow cho android
+        shadowColor: '#000', // shadow cho ios
+        shadowOffset: { width: 0, height: 1 },
+        shadowOpacity: 0.2,
+        shadowRadius: 1.5,
+        marginRight: 10,
+        marginLeft: 10,
+      },
+      
+      newStoryImage: {
+        width: 80,
+        height: 100,
+        borderRadius: 8,
+        padding: 1,
+      },
+      
+      newStoryTextContainer: {
+        flex: 1,
+        marginLeft: 15,
+        justifyContent: 'center',
+      },
+      
+      newStoryTitle: {
+        fontSize: 16,
+        fontWeight: 'bold',
+        marginBottom: 5,
+      },
+      
+      newStoryAuthor: {
+        fontSize: 14,
+        color: 'gray',
+        padding: 10,
+      },
+      
+
+
+
+
+
+
+
 });

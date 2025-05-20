@@ -6,9 +6,9 @@ import List from './list';
 import Search from './search';
 import Profile from './profile';
 import Truyen from './truyen';
-import { UserProvider } from '../UserContext';
-import { MaterialCommunityIcons } from '@expo/vector-icons';
+import { MaterialCommunityIcons, FontAwesome5 } from '@expo/vector-icons'; // Dùng FontAwesome5 của expo
 import Login from '../login';
+
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
 
@@ -16,56 +16,33 @@ const Tab = createBottomTabNavigator();
 function TabNavigator() {
   return (
     <Tab.Navigator
-      screenOptions={{
+      screenOptions={({ route }) => ({
         tabBarStyle: {
           backgroundColor: '#ffffff',
           borderTopWidth: 0,
           elevation: 5,
         },
-        tabBarLabelStyle: {
-          fontSize: 14,
-          fontWeight: 'bold',
-        },
+       // tabBarShowLabel: false,  // Ẩn chữ tên tab ở dưới icon
         tabBarActiveTintColor: '#007bff',
         tabBarInactiveTintColor: '#aaa',
-      }}
+        tabBarIcon: ({ color, size }) => {
+          if (route.name === 'Home') {
+            return <FontAwesome5 name="home" size={size} color={color} />;
+          } else if (route.name === 'List') {
+            return <FontAwesome5 name="bars" size={size} color={color} />;
+          } else if (route.name === 'Search') {
+            return <FontAwesome5 name="search" size={size} color={color} />;
+          } else if (route.name === 'Profile') {
+            return <FontAwesome5 name="user-circle" size={size} color={color} />;
+          }
+          return null;
+        },
+      })}
     >
-      <Tab.Screen
-        name="Home"
-        component={Home}
-        options={{
-          tabBarIcon: () => (
-            <MaterialCommunityIcons name="numeric-1-circle" size={24} color="#007bff" />
-          ),
-        }}
-      />
-      <Tab.Screen
-        name="List"
-        component={List}
-        options={{
-          tabBarIcon: () => (
-            <MaterialCommunityIcons name="numeric-2-circle" size={24} color="#007bff" />
-          ),
-        }}
-      />
-      <Tab.Screen
-        name="Search"
-        component={Search}
-        options={{
-          tabBarIcon: () => (
-            <MaterialCommunityIcons name="numeric-3-circle" size={24} color="#007bff" />
-          ),
-        }}
-      />
-      <Tab.Screen
-        name="Profile"
-        component={Profile}
-        options={{
-          tabBarIcon: () => (
-            <MaterialCommunityIcons name="numeric-4-circle" size={24} color="#007bff" />
-          ),
-        }}
-      />
+      <Tab.Screen name="Home" component={Home} />
+      <Tab.Screen name="List" component={List} />
+      <Tab.Screen name="Search" component={Search} />
+      <Tab.Screen name="Profile" component={Profile} />
     </Tab.Navigator>
   );
 }
@@ -73,19 +50,16 @@ function TabNavigator() {
 // AppNavigation: Gói cả TabNavigator và StackNavigator
 export default function AppNavigation() {
   return (
-  
-      <Stack.Navigator>
-        <Stack.Screen
-          name="Mainn"
-          component={TabNavigator} // TabNavigator cho màn hình chính
-          options={{ headerShown: false }}
-        />
-        
-        <Stack.Screen
-          name="Truyen"
-          component={Truyen} // Truyen là màn hình chi tiết của truyện
-        />
-      </Stack.Navigator>
-   
+    <Stack.Navigator>
+      <Stack.Screen
+        name="Mainn"
+        component={TabNavigator} // TabNavigator cho màn hình chính
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name="Truyen"
+        component={Truyen} // Truyen là màn hình chi tiết của truyện
+      />
+    </Stack.Navigator>
   );
 }
