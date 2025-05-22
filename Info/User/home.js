@@ -4,11 +4,12 @@ import { useNavigation } from '@react-navigation/native';
 import { saveAllStories } from '../storage'; // Đảm bảo import hàm saveAllStories
 import { UserContext } from '../UserContext';
 import { FontAwesome5 } from '@expo/vector-icons';
+
 const DEFAULT_IMAGE = 'https://i.pinimg.com/736x/e0/2c/be/e02cbe2ac89d57920544a21d43fb1b34.jpg';
 
 export default function Home() {
-    const [stories, setStories] = useState([]);
-    const [trending, setTrending] = useState([]);
+    const [stories, setStories] = useState([]); // Truyện mới
+    const [trending, setTrending] = useState([]); // Top Trending
     const [dataFetched, setDataFetched] = useState(false); // State để theo dõi dữ liệu đã fetch
     const navigation = useNavigation();
     const { user } = useContext(UserContext);
@@ -31,12 +32,16 @@ export default function Home() {
             </TouchableOpacity>
         );
     };
+
     const renderNewStoryy = (item) => {
         if (!item || !item._id || !item.title || !item.author) {
             console.error('Invalid story item:', item);
             return null;
         }
+
         const imageUri = item.coverImage || DEFAULT_IMAGE;
+        const lastChapter = item.chapters?.[item.chapters.length - 1];
+
         return (
             <TouchableOpacity
                 onPress={() => navigation.navigate('Truyen', { story: item })}
@@ -51,42 +56,66 @@ export default function Home() {
                         <Text style={styles.newStoryAuthor}>Tác giả: {item.author}</Text>
                     </View>
 
+                    {lastChapter ? (
+                        <Text style={styles.chapterInfo}>
+                             Chương {lastChapter.chapter_number}: {lastChapter.title}
+                        </Text>
+                    ) : (
+                        <Text style={styles.chapterInfo}>Chưa có chương mới</Text>
+                    )}
                 </View>
             </TouchableOpacity>
         );
     };
 
-    useEffect(() => {
-        const fetchData = async () => {
-            try {
-                const response = await fetch('http://192.168.1.44:5000/index');
-                if (!response.ok) {
-                    console.error('Error fetching data:', response.statusText);
-                    return;
-                }
-                const data = await response.json();
-
-                if (Array.isArray(data)) {
-                    if (!dataFetched) {
-                        console.log('Fetched data:', data);
-                        setDataFetched(true);
-                    }
-                    setStories(data);
-                    saveAllStories(data); // Lưu dữ liệu truyện vào AsyncStorage
-                    setTrending(data.slice(0, 5));
-                } else {
-                    console.error('Fetched data is not an array:', data);
-                }
-            } catch (error) {
-                console.error('Error fetching data:', error);
+   useEffect(() => {
+    const fetchData = async () => {
+        try {
+            const response = await fetch('http://192.168.1.44:5000/index');
+            if (!response.ok) {
+                console.error('Error fetching data:', response.statusText);
+                return;
             }
-        };
+            const data = await response.json();
 
-        fetchData();
-    }, [dataFetched]);
+            if (Array.isArray(data)) {
+                if (!dataFetched) {
+                    console.log('Fetched data:', data);
+                    setDataFetched(true);
+                }
+
+                // 1. Top Trending: Lấy ngẫu nhiên 5 truyện từ danh sách
+                const shuffled = [...data].sort(() => 0.5 - Math.random());
+                const randomTrending = shuffled.slice(0, 5); // Chọn 5 truyện ngẫu nhiên
+
+                // 2. Truyện mới: Sắp xếp theo thời gian (createdAt hoặc updatedAt)
+                const sortedStories = [...data].sort((a, b) => {
+                    // Lấy ngày createdAt hoặc updatedAt, ưu tiên trường createdAt trước
+                    const dateA = a.createdAt || a.updatedAt;
+                    const dateB = b.createdAt || b.updatedAt;
+                    
+                    // Nếu một trong hai trường là null, sẽ sử dụng giá trị còn lại.
+                    const releaseA = dateA ? new Date(dateA) : new Date(0); // Nếu không có giá trị, dùng mốc thời gian từ rất lâu
+                    const releaseB = dateB ? new Date(dateB) : new Date(0);
+
+                    return releaseB - releaseA; // Sắp xếp theo thứ tự từ mới đến cũ
+                });
+
+                setTrending(randomTrending); // Cập nhật Top Trending
+                setStories(sortedStories); // Cập nhật Truyện mới
+                saveAllStories(sortedStories); // Lưu dữ liệu truyện vào AsyncStorage
+            } else {
+                console.error('Fetched data is not an array:', data);
+            }
+        } catch (error) {
+            console.error('Error fetching data:', error);
+        }
+    };
+
+    fetchData();
+}, [dataFetched]);
 
     return (
-        
         <FlatList
             data={[{ type: 'header' }, { type: 'trending' }, { type: 'newStories' }, { type: 'viewAllButton' }]}
             renderItem={({ item }) => {
@@ -134,8 +163,6 @@ export default function Home() {
                         </View>
                     );
                 }
-
-
                 if (item.type === 'viewAllButton') {
                     return (
                         <TouchableOpacity style={styles.viewAllButton} onPress={() => navigation.navigate('List')}>
@@ -212,7 +239,6 @@ const styles = StyleSheet.create({
 
     newStories: {
         paddingRight: 10,
-
     },
 
     newStoryItem: {
@@ -229,6 +255,13 @@ const styles = StyleSheet.create({
         shadowRadius: 1.5,
         marginRight: 10,
         marginLeft: 10,
+    },
+    chapterInfo: {
+        fontSize: 13,
+        color: '#333',
+        marginTop: 4,
+        fontWeight: '300',
+        marginLeft: 5,
     },
 
     newStoryImage: {
@@ -255,20 +288,11 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         alignItems: 'center',
         marginRight: 2,
-       
-      },
+    },
 
     newStoryAuthor: {
         fontSize: 14,
         color: 'gray',
         padding: 10,
     },
-
-
-
-
-
-
-
-
 });
