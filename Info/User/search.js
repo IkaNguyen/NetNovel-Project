@@ -3,7 +3,7 @@ import { View, TextInput, FlatList, Text, TouchableOpacity, StyleSheet, Image } 
 import { useNavigation } from '@react-navigation/native';
 import { Ionicons } from '@expo/vector-icons';
 
-const API_URL = 'http://192.168.100.221:5000';
+const API_URL = 'http://192.168.1.44:5000';
 const defaultImage = 'https://i.pinimg.com/736x/d8/6e/79/d86e79e1289410f65e5f5bb8840dd4b7.jpg';
 
 export default function Search() {

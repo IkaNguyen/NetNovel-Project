@@ -16,21 +16,22 @@ mongoose.connect('mongodb://localhost:27017/Manga')
 
 // --- Tạo Schema và Model cho Comic Item ---
 const ComicSchema = new mongoose.Schema({
-    title: String,
-    author: String,
-    genres: [String],
-    chapters: [
-        {
-            chapter_number: Number,
-            title: String,
-            pages: [String], // Mảng các URL của trang truyện
-            release_date: Date,
-            _id: false // Tắt _id tự động cho subdocument chapters nếu không cần
-        }
-    ],
-    status: String // Ví dụ: "Ongoing", "Completed"
-    // Bạn có thể thêm các trường khác như coverImage: String, description: String, etc.
-}, { timestamps: true }); // timestamps: true sẽ tự động thêm createdAt và updatedAt
+  title: String,
+  author: String,
+  genres: [String],
+  coverImage: String,     // ✅ THÊM VÀO
+  description: String,    // ✅ THÊM VÀO
+  chapters: [
+    {
+      chapter_number: Number,
+      title: String,
+      pages: [String],
+      release_date: Date,
+      _id: false
+    }
+  ],
+  status: String
+}, { timestamps: true });
 
 
 const Comic = mongoose.model('Comic', ComicSchema, 'index');
@@ -134,6 +135,32 @@ app.delete("/index/:id", async (req, res) => {
         res.status(500).json({ message: 'Error deleting comic', error: error.message });
     }
 });
+// API để xóa chương bằng index
+// API để xóa chương bằng index
+app.delete("/index/:comicId/chapter/:chapterIndex", async (req, res) => {
+    try {
+        const { comicId, chapterIndex } = req.params;
+        const comic = await Comic.findById(comicId);
+        
+        if (!comic) {
+            return res.status(404).json({ message: 'Comic not found' });
+        }
+
+        if (chapterIndex >= comic.chapters.length || chapterIndex < 0) {
+            return res.status(400).json({ message: 'Invalid chapter index' });
+        }
+
+        // Xóa chương tại chapterIndex
+        comic.chapters.splice(chapterIndex, 1);  // Xóa chương tại chỉ số chapterIndex
+        await comic.save(); // Lưu lại thay đổi vào cơ sở dữ liệu
+
+        res.json({ message: 'Chapter deleted successfully', comic });
+    } catch (error) {
+        console.error('Error deleting chapter:', error);
+        res.status(500).json({ message: 'Error deleting chapter', error: error.message });
+    }
+});
+
 // GET: Tìm kiếm truyện theo tiêu đề
 app.get('/search', async (req, res) => {
     const { q } = req.query;

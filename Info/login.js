@@ -61,7 +61,7 @@ const Login = ({ navigation }) => {
 
         // Kiểm tra vai trò của người dùng và chuyển hướng tới trang tương ứng
         if (user.role === "admin") {
-          navigation.navigate("Admin"); // Điều hướng tới trang Admin
+          navigation.navigate("Tab"); // Điều hướng tới trang Admin
         } else if (user.role === "user") {
           navigation.navigate("Main"); // Điều hướng tới trang Main
         }
