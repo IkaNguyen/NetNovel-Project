@@ -25,7 +25,7 @@ export default function Update({ route, navigation }) {
     };
 
     try {
-      const response = await fetch(`http://192.168.1.44:5000/index/${comic._id}`, {
+      const response = await fetch(`http://10.0.141.167:5000/index/${comic._id}`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(updatedComic),
@@ -63,7 +63,7 @@ export default function Update({ route, navigation }) {
           text: 'OK',
           onPress: async () => {
             try {
-              const response = await fetch(`http://192.168.1.44:5000/index/${comic._id}`, {
+              const response = await fetch(`http://10.0.141.167:5000/index/${comic._id}`, {
                 method: 'DELETE',
               });
 

@@ -30,7 +30,7 @@ export default function Chuong({ route, navigation }) {
 
     try {
       // Lấy truyện gốc từ server
-      const comicRes = await fetch(`http://192.168.1.44:5000/index/${comicId}`);
+      const comicRes = await fetch(`http://10.0.141.167:5000/index/${comicId}`);
       const comicData = await comicRes.json();
 
       if (!comicRes.ok) throw new Error('Không lấy được truyện');
@@ -38,7 +38,7 @@ export default function Chuong({ route, navigation }) {
       const chapters = [...comicData.chapters];
       chapters[chapterIndex] = updatedChapter;
 
-      const response = await fetch(`http://192.168.1.44:5000/index/${comicId}`, {
+      const response = await fetch(`http://10.0.141.167:5000/index/${comicId}`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ ...comicData, chapters }),
@@ -69,7 +69,7 @@ export default function Chuong({ route, navigation }) {
         onPress: async () => {
           try {
             const response = await fetch(
-              `http://192.168.1.44:5000/index/${comicId}/chapter/${chapterIndex}`,
+              `http://10.0.141.167:5000/index/${comicId}/chapter/${chapterIndex}`,
               {
                 method: 'DELETE',
               }

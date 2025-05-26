@@ -71,7 +71,7 @@ export default function Home() {
    useEffect(() => {
     const fetchData = async () => {
         try {
-            const response = await fetch('http://192.168.1.44:5000/index');
+            const response = await fetch('http://10.0.141.167:5000/index');
             if (!response.ok) {
                 console.error('Error fetching data:', response.statusText);
                 return;

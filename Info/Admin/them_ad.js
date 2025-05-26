@@ -27,14 +27,14 @@ export default function ThemChuong({ route, navigation }) {
     };
 
     try {
-      const res = await fetch(`http://192.168.1.44:5000/index/${comicId}`);
+      const res = await fetch(`http://10.0.141.167:5000/index/${comicId}`);
       const comic = await res.json();
 
       if (!res.ok) throw new Error('Không lấy được truyện');
 
       const updatedChapters = [...comic.chapters, newChapter];
 
-      const response = await fetch(`http://192.168.1.44:5000/index/${comicId}`, {
+      const response = await fetch(`http://10.0.141.167:5000/index/${comicId}`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ ...comic, chapters: updatedChapters }),
@@ -69,7 +69,7 @@ export default function ThemChuong({ route, navigation }) {
         multiline
       />
 
-      <View style={{ marginTop: 20 }}>
+      <View style={{ marginTop: 20, backgroundColor: "#3D8361"}}>
         <Button title="Lưu chương mới" onPress={handleSave} />
       </View>
     </ScrollView>

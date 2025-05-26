@@ -9,7 +9,7 @@ export default function ComicDetail({ route, navigation }) {
 
   const fetchChapters = async () => {
     try {
-      const response = await fetch(`http://192.168.1.44:5000/index/${comic._id}`);
+      const response = await fetch(`http://10.0.141.167:5000/index/${comic._id}`);
       const data = await response.json();
       setChapters(data.chapters); // Cập nhật danh sách chương
     } catch (error) {
@@ -36,7 +36,7 @@ export default function ComicDetail({ route, navigation }) {
           style: 'destructive',
           onPress: async () => {
             try {
-              const response = await fetch(`http://192.168.1.44:5000/index/${comic._id}/chapter/${index}`, {
+              const response = await fetch(`http://10.0.141.167:5000/index/${comic._id}/chapter/${index}`, {
                 method: 'DELETE',
               });
               const result = await response.json();

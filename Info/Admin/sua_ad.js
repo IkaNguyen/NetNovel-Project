@@ -31,8 +31,16 @@ const Sua_ad = ({ navigation }) => {
       Alert.alert('❌ Lỗi', 'Không thể lưu thông tin.');
     }
   };
+  const handleLogout = async () => {
+    try {
+      await logout();
+      navigation.navigate('Login'); // Điều hướng đến màn hình Đăng Nhập
+      Alert.alert('Thành công', 'Đã đăng xuất');
+    } catch (error) {
+      Alert.alert('Lỗi', 'Không thể đăng xuất');
+    }
+  };
 
- 
   return (
     <ScrollView contentContainerStyle={styles.container}>
       <Text style={styles.label}>Tên người dùng</Text>
@@ -63,7 +71,11 @@ const Sua_ad = ({ navigation }) => {
         <Text style={styles.saveButtonText}> Lưu Thay Đổi</Text>
       </TouchableOpacity>
 
-   
+      <TouchableOpacity style={styles.saveButton} onPress={handleLogout}>
+        <Text style={styles.saveButtonText}> Đăng Xuất </Text>
+      </TouchableOpacity>
+
+
     </ScrollView>
   );
 };

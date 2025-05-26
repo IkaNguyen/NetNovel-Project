@@ -8,7 +8,7 @@ export default function Home_Ad({ navigation }) {
 
   const fetchComics = async () => {
     try {
-      const response = await fetch('http://192.168.1.44:5000/index');
+      const response = await fetch('http://10.0.141.167:5000/index');
       const data = await response.json();
       setComics(data); // Update the state with the fetched data
     } catch (error) {
@@ -97,7 +97,7 @@ const styles = StyleSheet.create({
     marginTop: 10,
   },
   detailButton: {
-    backgroundColor: '#007bff',
+    backgroundColor: '#3D8361',
     padding: 8,
     borderRadius: 5,
     alignItems: 'center',
